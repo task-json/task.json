@@ -18,7 +18,7 @@ whose fields are defined as follows:
 | Field    | Type    | Required | Description |
 | -------- | ------- | -------- | --------------- |
 | text     | string  | Yes | The main description of a task |
-| priority | boolean | no | Priority of a task (A-Z) |
+| priority | string | no | Priority of a task (A-Z) |
 | projects | string[] | no | Project tags |
 | contexts | string[] | no | Context tags |
 | due | string | no | Due date ("yyyy-MM-dd") |
