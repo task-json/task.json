@@ -30,3 +30,7 @@ but adds a new field for due date since it is widely used.
 
 Besides, the `done` field is not used because the completed tasks are stored in anthor JSON file.
 
+
+## Related Projects
+
+* [todo.json-cli](https://github.com/DCsunset/todo.json-cli): Command line todo management app for todo.json
