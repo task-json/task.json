@@ -1,0 +1,12 @@
+{
+  "name": "todo.json",
+  "version": "0.1.0",
+  "description": "Type definitions for todo.json",
+  "keywords": [
+    "todo.json",
+    "typescript"
+  ],
+  "types": "index.d.ts",
+  "author": "DCsunset",
+  "license": "GPL-3.0"
+}
