@@ -16,7 +16,7 @@ whose fields are defined as follows:
 
 | Field    | Type    | Required | Description |
 | -------- | ------- | -------- | --------------- |
-| uuid | string | Yes | To identify a task |
+| uuid | string | Yes | UUID for a task |
 | text     | string  | Yes | The main description of a task |
 | priority | string | no | Priority of a task (A-Z) |
 | projects | string[] | no | Project tags |
