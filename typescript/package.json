@@ -1,9 +1,9 @@
 {
-  "name": "todo.json",
-  "version": "0.1.0",
-  "description": "Type definitions for todo.json",
+  "name": "task.json",
+  "version": "1.0.0",
+  "description": "Type definitions for task.json",
   "keywords": [
-    "todo.json",
+    "task.json",
     "typescript"
   ],
   "types": "index.d.ts",
