@@ -29,7 +29,7 @@ whose fields are defined as follows:
 The format mainly follows the definition of `todo.txt`
 but adds a new field for due date since it is widely used.
 
-The `uuid` and `modified` fields are necessary for synchronization between multiple tasks.
+The `removed`, `uuid` and `modified` fields are necessary for synchronization between multiple tasks.
 
 ## Related Projects
 
