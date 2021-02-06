@@ -15,3 +15,5 @@ export interface TaskJson {
   done: Task[],
   removed: Task[]
 }
+
+export type TaskType = "todo" | "done" | "removed";
