@@ -12,6 +12,10 @@
     "dist/*",
     "index.d.ts"
   ],
+  "scripts": {
+    "build": "rm -rf dist && tsc -p ./tsconfig.build.json",
+    "test": "jest"
+  },
   "types": "index.d.ts",
   "author": "DCsunset",
   "license": "GPL-3.0",
