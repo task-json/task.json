@@ -1,10 +1,12 @@
 {
   "name": "task.json",
   "version": "1.2.0",
-  "description": "Type definitions for task.json",
+  "description": "Typescript library for task.json",
   "keywords": [
     "task.json",
-    "typescript"
+    "typescript",
+    "task",
+    "todo"
   ],
   "main": "dist/index.js",
   "files": [
