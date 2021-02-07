@@ -17,3 +17,7 @@ export interface TaskJson {
 }
 
 export type TaskType = "todo" | "done" | "removed";
+
+export declare function mergeTaskJson(...taskJsons: TaskJson[]): TaskJson;
+
+export declare function initTaskJson(): TaskJson;
