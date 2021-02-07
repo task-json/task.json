@@ -22,8 +22,8 @@ whose fields are defined as follows:
 | projects | string[] | no | Project tags |
 | contexts | string[] | no | Context tags |
 | due | string | no | Due date (ISO 8601 format) |
-| start | string | no | Start date of a task (ISO 8601 format) |
-| end | string | no | End date of a task (ISO 8601 format) |
+| start | string | yes | Created date of a task (ISO 8601 format) |
+| end | string | no | Done date of a task (ISO 8601 format) |
 | modified | string | yes | Modified date of a task (ISO 8601 format) |
 
 The format mainly follows the definition of `todo.txt`

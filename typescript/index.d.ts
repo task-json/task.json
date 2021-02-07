@@ -5,7 +5,7 @@ export interface Task {
   projects?: string[];
   contexts?: string[];
   due?: string;
-  start?: string;
+  start: string;
   end?: string;
   modified: string;
 }
