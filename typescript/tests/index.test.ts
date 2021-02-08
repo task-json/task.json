@@ -1,5 +1,5 @@
 import { TaskJson } from "index";
-import { mergeTaskJson, initTaskJson } from "../lib";
+import { mergeTaskJson, initTaskJson, isTask, isTaskJson } from "../lib";
 
 describe("Test for function mergeTaskJson", () => {
 	test("Without intersection", () => {
@@ -143,5 +143,26 @@ describe("Test for function mergeTaskJson", () => {
 			],
 			removed: []
 		});
+	});
+
+	test("Type guard", () => {
+		expect(isTask({
+			uuid: "4",
+			text: "Hello, world 4",
+			start: new Date("2000-01-04").toISOString(),
+			modified: new Date("2020-07-07").toISOString()
+		})).toEqual(true);
+
+		expect(() => isTask({
+			uuid: "4",
+			text: "Hello, world 4",
+			start: new Date("2000-01-04").toISOString(),
+		})).toThrow();
+
+		expect(() => isTaskJson({
+			todo: []
+		})).toThrow();
+
+		expect(isTaskJson(initTaskJson())).toEqual(true);
 	});
 });
