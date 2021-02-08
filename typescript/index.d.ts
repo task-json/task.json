@@ -10,6 +10,7 @@ export interface Task {
   end?: string;
   modified: string;
 }
+export declare function isTask(obj: any): obj is Task;
 
 /** @see {isTaskJson} ts-auto-guard:type-guard */
 export interface TaskJson {
@@ -17,6 +18,7 @@ export interface TaskJson {
   done: Task[],
   removed: Task[]
 }
+export function isTaskJson(obj: any): obj is TaskJson;
 
 export type TaskType = "todo" | "done" | "removed";
 
