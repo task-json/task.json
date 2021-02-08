@@ -1,3 +1,4 @@
+/** @see {isTask} ts-auto-guard:type-guard */
 export interface Task {
   uuid: string;
   text: string;
