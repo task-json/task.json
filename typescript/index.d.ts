@@ -18,7 +18,7 @@ export interface TaskJson {
   done: Task[],
   removed: Task[]
 }
-export function isTaskJson(obj: any): obj is TaskJson;
+export declare function isTaskJson(obj: any): obj is TaskJson;
 
 export type TaskType = "todo" | "done" | "removed";
 
