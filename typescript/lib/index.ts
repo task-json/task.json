@@ -1,5 +1,6 @@
 import { Task, TaskJson, TaskType } from "../index";
-import { DateTime, Interval } from "luxon";
+import { DateTime } from "luxon";
+export * from "./type.guard";
 
 export function initTaskJson(): TaskJson {
 	return {

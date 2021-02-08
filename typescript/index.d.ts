@@ -10,6 +10,7 @@ export interface Task {
   modified: string;
 }
 
+/** @see {isTaskJson} ts-auto-guard:type-guard */
 export interface TaskJson {
   todo: Task[],
   done: Task[],
