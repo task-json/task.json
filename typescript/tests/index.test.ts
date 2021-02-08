@@ -153,15 +153,15 @@ describe("Test for function mergeTaskJson", () => {
 			modified: new Date("2020-07-07").toISOString()
 		})).toEqual(true);
 
-		expect(() => isTask({
+		expect(isTask({
 			uuid: "4",
 			text: "Hello, world 4",
 			start: new Date("2000-01-04").toISOString(),
-		})).toThrow();
+		})).toEqual(false);
 
-		expect(() => isTaskJson({
+		expect(isTaskJson({
 			todo: []
-		})).toThrow();
+		})).toEqual(false);
 
 		expect(isTaskJson(initTaskJson())).toEqual(true);
 	});
