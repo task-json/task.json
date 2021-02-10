@@ -34,3 +34,4 @@ The `removed`, `uuid` and `modified` fields are necessary for synchronization be
 ## Related Projects
 
 * [task.json-cli](https://github.com/DCsunset/task.json-cli): Command line task management app for task.json
+* [task.json-server](https://github.com/DCsunset/task.json-server): Sync server for task.json
