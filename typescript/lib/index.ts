@@ -1,5 +1,6 @@
 import { Task, TaskJson, TaskType } from "../index";
 import { DateTime } from "luxon";
+import * as _ from "lodash";
 export * from "./type.guard";
 
 export function initTaskJson(): TaskJson {
@@ -8,6 +9,56 @@ export function initTaskJson(): TaskJson {
 		done: [],
 		removed: []
 	};
+}
+
+export function uuidToIndex(taskJson: TaskJson, type: TaskType, uuids: string[]): number[] {
+	const uuidSet = new Set(uuids);
+	const indexes: number[] = [];
+
+	taskJson[type].forEach((task, index) => {
+		if (uuidSet.has(task.uuid)) {
+			indexes.push(index);
+		}
+	});
+	return indexes;
+}
+
+export function removeTasks(taskJson: TaskJson, type: TaskType, indexes: number[]) {
+	const date = new Date().toISOString();
+	const removedTasks = _.remove(taskJson[type], (_, index) => indexes.includes(index))
+		.map(task => {
+			task.modified = date;
+			return task;
+		});
+	taskJson.removed.push(...removedTasks);
+}
+
+export function doTasks(taskJson: TaskJson, indexes: number[]) {
+	const date = new Date().toISOString();
+	const doneTasks = _.remove(taskJson.todo, (_, index) => indexes.includes(index))
+		.map(task => {
+			task.end = date;
+			task.modified = date;
+			return task;
+		});
+	taskJson.done.push(...doneTasks);
+}
+
+export function undoTasks(taskJson: TaskJson, type: "removed" | "done", indexes: number[]) {
+	const date = new Date().toISOString();
+	const undoneTasks = _.remove(taskJson[type], (_, index) => indexes.includes(index))
+		.map(task => {
+			task.modified = date;
+			return task;
+		});
+	const doneTasks = undoneTasks.filter(task => type === "removed" && task.end);
+	const todoTasks = undoneTasks.filter(task => type === "done" || !task.end);
+	todoTasks.forEach(task => {
+		delete task.end;
+		return task;
+	});
+	taskJson.todo.push(...todoTasks);
+	taskJson.done.push(...doneTasks);
 }
 
 export function mergeTaskJson(...taskJsons: TaskJson[]): TaskJson {
