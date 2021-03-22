@@ -31,6 +31,17 @@ const taskJson3 = mergeTaskJson(taskJson1, taskJson2);
 ```
 
 
+## Exported Functions
+
+| Name          | Description                           |
+| ------------- | ------------------------------------- |
+| initTaskJson  | Create an empty TaskJson object       |
+| uuidToIndex   | Find indexes by uuids                 |
+| removeTasks   | Remove tasks by indexes               |
+| doTasks       | Finish todo tasks by indexes          |
+| undoTasks     | Undo done or removed tasks by indexes |
+| mergeTaskJson | Merge two TaskJson objects            |
+
 ## License
 
 GPL-3.0
