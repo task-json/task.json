@@ -16,7 +16,7 @@ whose fields are defined as follows:
 
 | Field    | Type    | Required | Description |
 | -------- | ------- | -------- | --------------- |
-| uuid | string | Yes | UUID for a task |
+| id | string | Yes | Unique ID for a task (uuid is recommended but others can also be used) |
 | text     | string  | Yes | The main description of a task |
 | priority | string | no | Priority of a task (A-Z) |
 | projects | string[] | no | Project tags |
@@ -29,7 +29,7 @@ whose fields are defined as follows:
 The format mainly follows the definition of `todo.txt`
 but adds a new field for due date since it is widely used.
 
-The `removed`, `uuid` and `modified` fields are necessary for synchronization between multiple tasks.
+The `removed`, `id` and `modified` fields are necessary for synchronization between multiple tasks.
 
 
 ## Libraries
