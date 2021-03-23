@@ -36,6 +36,7 @@ const taskJson3 = mergeTaskJson(taskJson1, taskJson2);
 | Name          | Description                           |
 | ------------- | ------------------------------------- |
 | initTaskJson  | Create an empty TaskJson object       |
+| taskUrgency   | Compute task urgency for sorting      |
 | idToIndex     | Find indexes by ids                   |
 | removeTasks   | Remove tasks by indexes               |
 | doTasks       | Finish todo tasks by indexes          |

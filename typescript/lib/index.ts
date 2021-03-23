@@ -1,5 +1,5 @@
 import { Task, TaskJson, TaskType } from "../index";
-import { DateTime } from "luxon";
+import { DateTime, Interval } from "luxon";
 import * as _ from "lodash";
 export * from "./type.guard";
 
@@ -9,6 +9,33 @@ export function initTaskJson(): TaskJson {
 		done: [],
 		removed: []
 	};
+}
+
+export function taskUrgency(task: Task): number {
+  let urg = 0;
+  if (task.priority) {
+    urg += "Z".charCodeAt(0) - task.priority.charCodeAt(0) + 1;
+  }
+  if (task.due) {
+    const interval = Interval.fromDateTimes(
+      DateTime.local(),
+      DateTime.fromISO(task.due)
+    );
+    const days = interval.length("days");
+		if (!interval.isValid) {
+			urg += 400;
+		}
+    else if (days < 3) {
+      urg += 100 * (3 - days);
+    }
+    else if (days < 7) {
+      urg += 10 * (7 - days);
+    }
+    else {
+      urg += 0.1;
+    }
+  }
+  return urg;
 }
 
 export function idToIndex(taskJson: TaskJson, type: TaskType, ids: string[]): number[] {
