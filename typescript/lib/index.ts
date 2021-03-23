@@ -23,7 +23,7 @@ export function idToIndex(taskJson: TaskJson, type: TaskType, ids: string[]): nu
 	return indexes;
 }
 
-export function removeTasks(taskJson: TaskJson, type: TaskType, indexes: number[]) {
+export function removeTasks(taskJson: TaskJson, type: TaskType, indexes: number[]): void {
 	const date = new Date().toISOString();
 	const removedTasks = _.remove(taskJson[type], (_, index) => indexes.includes(index))
 		.map(task => {
@@ -33,7 +33,7 @@ export function removeTasks(taskJson: TaskJson, type: TaskType, indexes: number[
 	taskJson.removed.push(...removedTasks);
 }
 
-export function doTasks(taskJson: TaskJson, indexes: number[]) {
+export function doTasks(taskJson: TaskJson, indexes: number[]): void {
 	const date = new Date().toISOString();
 	const doneTasks = _.remove(taskJson.todo, (_, index) => indexes.includes(index))
 		.map(task => {
@@ -44,7 +44,7 @@ export function doTasks(taskJson: TaskJson, indexes: number[]) {
 	taskJson.done.push(...doneTasks);
 }
 
-export function undoTasks(taskJson: TaskJson, type: "removed" | "done", indexes: number[]) {
+export function undoTasks(taskJson: TaskJson, type: "removed" | "done", indexes: number[]): void {
 	const date = new Date().toISOString();
 	const undoneTasks = _.remove(taskJson[type], (_, index) => indexes.includes(index))
 		.map(task => {
