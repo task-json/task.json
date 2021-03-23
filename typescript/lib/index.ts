@@ -14,7 +14,7 @@ export function initTaskJson(): TaskJson {
 export function taskUrgency(task: Task): number {
   let urg = 0;
   if (task.priority) {
-    urg += "Z".charCodeAt(0) - task.priority.charCodeAt(0) + 1;
+    urg += "Z".charCodeAt(0) - task.priority.charCodeAt(0) + 2;
   }
   if (task.due) {
     const interval = Interval.fromDateTimes(
@@ -23,13 +23,13 @@ export function taskUrgency(task: Task): number {
     );
     const days = interval.length("days");
 		if (!interval.isValid) {
-			urg += 400;
+			urg += 4000;
 		}
     else if (days < 3) {
-      urg += 100 * (3 - days);
+      urg += 1000 * (3 - days);
     }
     else if (days < 7) {
-      urg += 10 * (7 - days);
+      urg += 100 * (7 - days);
     }
     else {
       urg += 0.1;
