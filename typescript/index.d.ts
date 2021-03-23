@@ -1,6 +1,6 @@
 /** @see {isTask} ts-auto-guard:type-guard */
 export interface Task {
-  uuid: string;
+  id: string;
   text: string;
   priority?: string;
   projects?: string[];

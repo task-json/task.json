@@ -21,7 +21,7 @@ const taskJson1 = initTaskJson();
 const taskJson2 = initTaskJson();
 
 const task: Task = {
-  uuid: "fc18da07-9717-4199-8474-9bbc4c4c6cb5",
+  id: "fc18da07-9717-4199-8474-9bbc4c4c6cb5",
   text: "Hello, world!",
   modified: new Date().toISOString()
 };
@@ -36,7 +36,7 @@ const taskJson3 = mergeTaskJson(taskJson1, taskJson2);
 | Name          | Description                           |
 | ------------- | ------------------------------------- |
 | initTaskJson  | Create an empty TaskJson object       |
-| uuidToIndex   | Find indexes by uuids                 |
+| idToIndex     | Find indexes by ids                   |
 | removeTasks   | Remove tasks by indexes               |
 | doTasks       | Finish todo tasks by indexes          |
 | undoTasks     | Undo done or removed tasks by indexes |

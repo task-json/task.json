@@ -11,12 +11,12 @@ export function initTaskJson(): TaskJson {
 	};
 }
 
-export function uuidToIndex(taskJson: TaskJson, type: TaskType, uuids: string[]): number[] {
-	const uuidSet = new Set(uuids);
+export function idToIndex(taskJson: TaskJson, type: TaskType, ids: string[]): number[] {
+	const idSet = new Set(ids);
 	const indexes: number[] = [];
 
 	taskJson[type].forEach((task, index) => {
-		if (uuidSet.has(task.uuid)) {
+		if (idSet.has(task.id)) {
 			indexes.push(index);
 		}
 	});
@@ -71,17 +71,17 @@ export function mergeTaskJson(...taskJsons: TaskJson[]): TaskJson {
 	for (const type of types) {
 		for (const taskJson of taskJsons) {
 			for (const task of taskJson[type]) {
-				if (tasks.has(task.uuid)) {
+				if (tasks.has(task.id)) {
 					// Compare timestamp
 					const current = DateTime.fromISO(task.modified);
-					const existing = DateTime.fromISO(tasks.get(task.uuid)!.task.modified);
+					const existing = DateTime.fromISO(tasks.get(task.id)!.task.modified);
 
 					// Update tasks only if current > existing
 					if (current <= existing)
 						continue;
 				}
 
-				tasks.set(task.uuid, { type, task });
+				tasks.set(task.id, { type, task });
 			}
 		}
 	}

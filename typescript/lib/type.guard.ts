@@ -9,7 +9,7 @@ export function isTask(obj: any, _argumentName?: string): obj is Task {
         (obj !== null &&
             typeof obj === "object" ||
             typeof obj === "function") &&
-        typeof obj.uuid === "string" &&
+        typeof obj.id === "string" &&
         typeof obj.text === "string" &&
         (typeof obj.priority === "undefined" ||
             typeof obj.priority === "string") &&
