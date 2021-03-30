@@ -33,15 +33,20 @@ const taskJson3 = mergeTaskJson(taskJson1, taskJson2);
 
 ## Exported Functions
 
-| Name          | Description                           |
-| ------------- | ------------------------------------- |
-| initTaskJson  | Create an empty TaskJson object       |
-| taskUrgency   | Compute task urgency for sorting      |
-| idToIndex     | Find indexes by ids                   |
-| removeTasks   | Remove tasks by indexes               |
-| doTasks       | Finish todo tasks by indexes          |
-| undoTasks     | Undo done or removed tasks by indexes |
-| mergeTaskJson | Merge two TaskJson objects            |
+| Name          | Description                                |
+| ------------- | ------------------------------------------ |
+| initTaskJson  | Create an empty TaskJson object            |
+| taskUrgency   | Compute task urgency for sorting           |
+| idToIndex     | Find indexes by ids                        |
+| removeTasks   | Remove tasks by indexes                    |
+| eraseTasks    | Erase removed tasks by indexes permanently |
+| doTasks       | Finish todo tasks by indexes               |
+| undoTasks     | Undo done or removed tasks by indexes      |
+| mergeTaskJson | Merge two TaskJson objects                 |
+
+**Note**: `eraseTasks` is a dangerous operation.
+It will permantly delete tasks and may break the merge procedure (used in synchronization).
+Make sure the erased tasks are not in other TaskJson objects if you want to merge them.
 
 ## License
 
