@@ -52,7 +52,9 @@ export function idToIndex(taskJson: TaskJson, type: TaskType, ids: string[]): nu
 
 export function removeTasks(taskJson: TaskJson, type: TaskType, indexes: number[]): void {
 	const date = new Date().toISOString();
-	const removedTasks = _.remove(taskJson[type], (_, index) => indexes.includes(index))
+	const indexSet = new Set(indexes);
+
+	const removedTasks = _.remove(taskJson[type], (_, index) => indexSet.has(index))
 		.map(task => {
 			task.modified = date;
 			return task;
@@ -62,12 +64,14 @@ export function removeTasks(taskJson: TaskJson, type: TaskType, indexes: number[
 
 // Erase removed tasks permanently
 export function eraseTasks(taskJson: TaskJson, indexes: number[]) {
-	_.remove(taskJson.removed, (_, index) => indexes.includes(index));
+	const indexSet = new Set(indexes);
+	_.remove(taskJson.removed, (_, index) => indexSet.has(index));
 }
 
 export function doTasks(taskJson: TaskJson, indexes: number[]): void {
 	const date = new Date().toISOString();
-	const doneTasks = _.remove(taskJson.todo, (_, index) => indexes.includes(index))
+	const indexSet = new Set(indexes);
+	const doneTasks = _.remove(taskJson.todo, (_, index) => indexSet.has(index))
 		.map(task => {
 			task.end = date;
 			task.modified = date;
@@ -78,7 +82,8 @@ export function doTasks(taskJson: TaskJson, indexes: number[]): void {
 
 export function undoTasks(taskJson: TaskJson, type: "removed" | "done", indexes: number[]): void {
 	const date = new Date().toISOString();
-	const undoneTasks = _.remove(taskJson[type], (_, index) => indexes.includes(index))
+	const indexSet = new Set(indexes);
+	const undoneTasks = _.remove(taskJson[type], (_, index) => indexSet.has(index))
 		.map(task => {
 			task.modified = date;
 			return task;
