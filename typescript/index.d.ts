@@ -26,6 +26,7 @@ export declare function initTaskJson(): TaskJson;
 export declare function taskUrgency(task: Task): number;
 export declare function idToIndex(taskJson: TaskJson, type: TaskType, ids: string[]): number[];
 export declare function removeTasks(taskJson: TaskJson, type: TaskType, indexes: number[]): void;
+export declare function eraseTasks(taskJson: TaskJson, indexes: number[]): void;
 export declare function doTasks(taskJson: TaskJson, indexes: number[]): void;
 export declare function undoTasks(taskJson: TaskJson, type: "removed" | "done", indexes: number[]): void;
 export declare function mergeTaskJson(...taskJsons: TaskJson[]): TaskJson;

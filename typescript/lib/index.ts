@@ -63,7 +63,7 @@ export function removeTasks(taskJson: TaskJson, type: TaskType, indexes: number[
 }
 
 // Erase removed tasks permanently
-export function eraseTasks(taskJson: TaskJson, indexes: number[]) {
+export function eraseTasks(taskJson: TaskJson, indexes: number[]): void {
 	const indexSet = new Set(indexes);
 	_.remove(taskJson.removed, (_, index) => indexSet.has(index));
 }
