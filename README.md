@@ -38,6 +38,7 @@ The `removed`, `id` and `modified` fields are necessary for synchronization betw
 
 ## Related Projects
 
+* [task.json-web](https://github.com/DCsunset/task.json-web): Web and Android UI for task.json
 * [task.json-cli](https://github.com/DCsunset/task.json-cli): Command line task management app for task.json
 * [task.json-server](https://github.com/DCsunset/task.json-server): Sync server for task.json
 * [task.json-client](https://github.com/DCsunset/task.json-client): Libraries to interact with task.json-server
