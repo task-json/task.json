@@ -1,5 +1,5 @@
 import { TaskJson } from "index";
-import { mergeTaskJson, initTaskJson, isTask, isTaskJson, removeTasks, doTasks, undoTasks, idToIndex } from "../lib";
+import { compareMergedTaskJson, mergeTaskJson, initTaskJson, isTask, isTaskJson, removeTasks, doTasks, undoTasks, idToIndex } from "../lib";
 
 describe("Test task manipulations", () => {
 	const tj: TaskJson = {
@@ -232,6 +232,76 @@ describe("Test mergeTaskJson", () => {
 				}
 			],
 			removed: []
+		});
+	});
+});
+
+describe("Test compareMergedTaskJson", () => {
+	test("Mixed merge", () => {
+		const tj1: TaskJson = {
+			todo: [
+				{
+					id: "1",
+					text: "Hello, world 1",
+					start: new Date("2000-01-01").toISOString(),
+					modified: new Date("2010-07-07").toISOString(),
+				},
+				{
+					id: "2",
+					text: "Hello, world 2",
+					start: new Date("2000-01-02").toISOString(),
+					modified: new Date("2020-07-07").toISOString()
+				},
+				{
+					id: "3",
+					text: "Hello, world 3",
+					start: new Date("2000-01-02").toISOString(),
+					modified: new Date("2020-07-07").toISOString()
+				}
+			],
+			done: [],
+			removed: []
+		};
+
+		// merged
+		const tj2: TaskJson = {
+			todo: [
+				{
+					id: "1",
+					text: "Hello, world 1 modified",
+					start: new Date("2000-01-01").toISOString(),
+					modified: new Date("2020-07-07").toISOString()
+				},
+				{
+					id: "2",
+					text: "Hello, world 2",
+					start: new Date("2000-01-02").toISOString(),
+					modified: new Date("2020-07-08").toISOString()
+				}
+			],
+			done: [
+				{
+					id: "4",
+					text: "Hello, world 4",
+					start: new Date("2000-01-04").toISOString(),
+					modified: new Date("2020-07-07").toISOString()
+				}
+			],
+			removed: [
+				{
+					id: "3",
+					text: "Hello, world 3",
+					start: new Date("2000-01-02").toISOString(),
+					modified: new Date("2020-07-08").toISOString()
+				}
+			]
+		};
+
+		expect(compareMergedTaskJson(tj1, tj2)).toEqual({
+			created: 1,
+			updated: 2,
+			removed: 1,
+			restored: 0
 		});
 	});
 });
