@@ -42,7 +42,10 @@ const taskJson3 = mergeTaskJson(taskJson1, taskJson2);
 | eraseTasks    | Erase removed tasks by indexes permanently |
 | doTasks       | Finish todo tasks by indexes               |
 | undoTasks     | Undo done or removed tasks by indexes      |
+| indexTaskJson | Convert TaskJson to its indexed version    |
+| deindexTaskJson | Convert indexed TaskJson to the normal one   |
 | mergeTaskJson | Merge two TaskJson objects                 |
+| compareMergedTaskJson | Compare merged TaskJson with the original one                 |
 
 **Note**: `eraseTasks` is a dangerous operation.
 It will permantly delete tasks and may break the merge procedure (used in synchronization).
@@ -51,3 +54,4 @@ Make sure the erased tasks are not in other TaskJson objects if you want to merg
 ## License
 
 GPL-3.0
+
