@@ -1,4 +1,4 @@
-import { Task, TaskJson, TaskType, TaskStat, IndexedTaskJson } from "../index";
+import { Task, TaskJson, TaskType, DiffStat, IndexedTaskJson } from "../index";
 import { DateTime, Interval } from "luxon";
 import * as _ from "lodash";
 export * from "./type.guard";
@@ -155,8 +155,8 @@ export function mergeTaskJson(...taskJsons: TaskJson[]): TaskJson {
 }
 
 // pre-condition: merged = mergerTaskJson(...[original, ...])
-export function compareMergedTaskJson(original: TaskJson, merged: TaskJson): { [stat in TaskStat]: number } {
-	const count: { [stat in TaskStat]: number } = {
+export function compareMergedTaskJson(original: TaskJson, merged: TaskJson): DiffStat {
+	const diff: DiffStat = {
 		created: 0,
 		updated: 0,
 		removed: 0,
@@ -172,20 +172,20 @@ export function compareMergedTaskJson(original: TaskJson, merged: TaskJson): { [
 			// Unmodified
 			if (originalType === mergedType) {
 				if (!_.isEqual(mergedTask, originalTask))
-					++count.updated; // Update info
+					++diff.updated; // Update info
 			}
 			else if (mergedType === "removed")
-				++count.removed;
+				++diff.removed;
 			else if (originalType === "removed")
-				++count.restored;
+				++diff.restored;
 			else
-				++count.updated; // Update type
+				++diff.updated; // Update type
 		}
 		else {
-			++count.created;
+			++diff.created;
 		}
 	}
 
-	return count;
+	return diff;
 }
 

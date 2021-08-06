@@ -27,7 +27,12 @@ export type IndexedTaskJson = Map<string, {
 
 export type TaskType = "todo" | "done" | "removed";
 
-export type TaskStat = "created" | "updated" | "removed" | "restored";
+export type DiffStat = {
+	created: number,
+	updated: number,
+	removed: number,
+	restored: number
+};
 
 export declare function initTaskJson(): TaskJson;
 export declare function taskUrgency(task: Task): number;
@@ -39,5 +44,5 @@ export declare function undoTasks(taskJson: TaskJson, type: "removed" | "done", 
 export declare function indexTaskJson(taskJson: TaskJson): IndexedTaskJson;
 export declare function deindexTaskJson(indexedTaskJson: IndexedTaskJson): TaskJson;
 export declare function mergeTaskJson(...taskJsons: TaskJson[]): TaskJson;
-export declare function compareMergedTaskJson(original: TaskJson, merged: TaskJson): { [stat in TaskStat]: number };
+export declare function compareMergedTaskJson(original: TaskJson, merged: TaskJson): DiffStat;
 
