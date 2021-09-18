@@ -1,5 +1,5 @@
 import { TaskJson } from "index";
-import { compareMergedTaskJson, mergeTaskJson, initTaskJson, isTask, isTaskJson, removeTasks, doTasks, undoTasks, idToIndex, extractDependencyComponent } from "../lib";
+import { compareMergedTaskJson, mergeTaskJson, initTaskJson, isTask, isTaskJson, removeTasks, doTasks, undoTasks, idToIndex, getDepComponent } from "../lib";
 
 describe("Test task manipulations", () => {
 	const tj: TaskJson = {
@@ -306,7 +306,7 @@ describe("Test compareMergedTaskJson", () => {
 	});
 });
 
-describe("Test extractDependencyComponent", () => {
+describe("Test getDepComponent", () => {
 	test("Normal dependencies", () => {
 		const tj: TaskJson = {
 			todo: [
@@ -341,9 +341,9 @@ describe("Test extractDependencyComponent", () => {
 			removed: []
 		};
 
-		expect(extractDependencyComponent(tj, "2").sort())
+		expect(getDepComponent(tj, "2").sort())
 			.toEqual(["1", "2", "4"]);
-		expect(extractDependencyComponent(tj, "3"))
+		expect(getDepComponent(tj, "3"))
 			.toEqual(["3"]);
 	});
 });
