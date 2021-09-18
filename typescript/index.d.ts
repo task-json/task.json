@@ -5,6 +5,7 @@ export interface Task {
   priority?: string;
   projects?: string[];
   contexts?: string[];
+  deps?: string[];
   due?: string;
   start: string;
   end?: string;

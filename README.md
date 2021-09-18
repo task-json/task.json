@@ -21,13 +21,14 @@ whose fields are defined as follows:
 | priority | string | no | Priority of a task (A-Z) |
 | projects | string[] | no | Project tags |
 | contexts | string[] | no | Context tags |
+| deps | string[] | no | Dependencies (IDs of other tasks) |
 | due | string | no | Due date (ISO 8601 format) |
 | start | string | yes | Created date of a task (ISO 8601 format) |
 | end | string | no | Done date of a task (ISO 8601 format) |
 | modified | string | yes | Modified date of a task (ISO 8601 format) |
 
 The format mainly follows the definition of `todo.txt`
-but adds a new field for due date since it is widely used.
+but adds some new fields for more features.
 
 The `removed`, `id` and `modified` fields are necessary for synchronization between multiple tasks.
 

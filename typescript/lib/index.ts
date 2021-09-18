@@ -189,3 +189,41 @@ export function compareMergedTaskJson(original: TaskJson, merged: TaskJson): Dif
 	return diff;
 }
 
+// Extract the dependency component of a task
+export function extractDependencyComponent(taskJson: TaskJson, taskId: string) {
+	// Build a bidirectional adjacent list first
+	const adjacent: Map<string, string[]> = new Map();
+	const types: TaskType[] = ["todo", "done", "removed"];
+
+	const addEdges = (task: Task) => {
+		if (!adjacent.has(task.id))
+			adjacent.set(task.id, []);
+		if (task.deps) {
+			const origlist = adjacent.get(task.id) ?? [];
+			adjacent.set(task.id, origlist.concat(task.deps));
+			for (const dep of task.deps) {
+				if (!adjacent.get(dep))
+					adjacent.set(dep, []);
+				adjacent.get(dep)!.push(task.id);
+			}
+		}
+	};
+
+	for (const type of types)
+		for (const task of taskJson[type])
+			addEdges(task);
+	
+	// BFS (using stack for efficiency)
+	const component: Set<string> = new Set();
+	const stack = [taskId];
+	while (stack.length > 0) {
+		const current = stack.pop()!;
+		if (component.has(current))
+			continue;
+		component.add(current);
+		if (adjacent.has(current))
+			stack.push(...adjacent.get(current)!);
+	}
+
+	return [...component];
+}

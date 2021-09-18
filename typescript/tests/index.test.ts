@@ -1,5 +1,5 @@
 import { TaskJson } from "index";
-import { compareMergedTaskJson, mergeTaskJson, initTaskJson, isTask, isTaskJson, removeTasks, doTasks, undoTasks, idToIndex } from "../lib";
+import { compareMergedTaskJson, mergeTaskJson, initTaskJson, isTask, isTaskJson, removeTasks, doTasks, undoTasks, idToIndex, extractDependencyComponent } from "../lib";
 
 describe("Test task manipulations", () => {
 	const tj: TaskJson = {
@@ -303,6 +303,48 @@ describe("Test compareMergedTaskJson", () => {
 			removed: 1,
 			restored: 0
 		});
+	});
+});
+
+describe("Test extractDependencyComponent", () => {
+	test("Normal dependencies", () => {
+		const tj: TaskJson = {
+			todo: [
+				{
+					id: "1",
+					text: "Hello, world 1",
+					deps: ["2"],
+					start: new Date("2000-01-01").toISOString(),
+					modified: new Date("2010-07-07").toISOString(),
+				},
+				{
+					id: "2",
+					text: "Hello, world 2",
+					start: new Date("2000-01-02").toISOString(),
+					modified: new Date("2020-07-07").toISOString()
+				},
+				{
+					id: "3",
+					text: "Hello, world 3",
+					start: new Date("2000-01-02").toISOString(),
+					modified: new Date("2020-07-07").toISOString()
+				},
+				{
+					id: "4",
+					text: "Hello, world 3",
+					deps: ["2"],
+					start: new Date("2000-01-02").toISOString(),
+					modified: new Date("2020-07-07").toISOString()
+				}
+			],
+			done: [],
+			removed: []
+		};
+
+		expect(extractDependencyComponent(tj, "2").sort())
+			.toEqual(["1", "2", "4"]);
+		expect(extractDependencyComponent(tj, "3"))
+			.toEqual(["3"]);
 	});
 });
 
