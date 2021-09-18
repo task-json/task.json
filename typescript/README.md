@@ -46,6 +46,7 @@ const taskJson3 = mergeTaskJson(taskJson1, taskJson2);
 | deindexTaskJson | Convert indexed TaskJson to the normal one   |
 | mergeTaskJson | Merge two TaskJson objects                 |
 | compareMergedTaskJson | Compare merged TaskJson with the original one                 |
+| getDepComponent | Get a task's connected component in dependency graph |
 
 **Note**: `eraseTasks` is a dangerous operation.
 It will permantly delete tasks and may break the merge procedure (used in synchronization).

@@ -189,8 +189,8 @@ export function compareMergedTaskJson(original: TaskJson, merged: TaskJson): Dif
 	return diff;
 }
 
-// Extract the dependency component of a task
-export function extractDependencyComponent(taskJson: TaskJson, taskId: string): string[] {
+// Get a task's connected component in dependency graph
+export function getDepComponent(taskJson: TaskJson, taskId: string): string[] {
 	// Build a bidirectional adjacent list first
 	const adjacent: Map<string, string[]> = new Map();
 	const types: TaskType[] = ["todo", "done", "removed"];
