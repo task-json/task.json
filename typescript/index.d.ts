@@ -46,4 +46,5 @@ export declare function indexTaskJson(taskJson: TaskJson): IndexedTaskJson;
 export declare function deindexTaskJson(indexedTaskJson: IndexedTaskJson): TaskJson;
 export declare function mergeTaskJson(...taskJsons: TaskJson[]): TaskJson;
 export declare function compareMergedTaskJson(original: TaskJson, merged: TaskJson): DiffStat;
+export declare function extractDependencyComponent(taskJson: TaskJson, taskId: string): string[];
 
