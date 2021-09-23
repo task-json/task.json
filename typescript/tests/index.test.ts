@@ -1,5 +1,5 @@
-import { compareMergedTaskJson, mergeTaskJson, initTaskJson, isTask, isTaskJson, removeTasks, doTasks, undoTasks, idToIndex, getDepComponent, getDepChildren } from "../lib";
 import { TaskJson } from "index";
+import { compareMergedTaskJson, mergeTaskJson, initTaskJson, isTask, isTaskJson, removeTasks, doTasks, undoTasks, idToIndex, getDepComponent, getDepChildren, eraseTasks } from "../lib";
 
 describe("Test task manipulations", () => {
 	const tj: TaskJson = {
@@ -19,68 +19,84 @@ describe("Test task manipulations", () => {
 			{
 				id: "3",
 				text: "Hello, world 3",
+				deps: ["4", "5"],
 				start: new Date("2000-01-03").toISOString(),
 				modified: new Date("2010-07-07").toISOString()
 			},
 			{
 				id: "4",
 				text: "Hello, world 4",
+				deps: ["5"],
 				start: new Date("2000-01-04").toISOString(),
 				modified: new Date("2020-07-07").toISOString()
-			}
+			},
+			{
+				id: "5",
+				text: "Hello, world 5",
+				start: new Date("2000-01-04").toISOString(),
+				modified: new Date("2020-07-07").toISOString()
+			},
 		],
 		done: [],
 		removed: []
 	};
 
 	test("doTasks", () => {
-		// todo: [1, 2, 3, 4]
+		// todo: [1, 2, 3, 4, 5]
 		doTasks(tj, [0]);
 		expect(tj.done.length).toBe(1);
-		expect(tj.todo.length).toBe(3);
+		expect(tj.todo.length).toBe(4);
 		expect(tj.done[0].id).toEqual("1");
 
 		doTasks(tj, [0, 2]);
 		expect(tj.done.length).toBe(3);
-		expect(tj.todo.length).toBe(1);
+		expect(tj.todo.length).toBe(2);
 		expect(tj.done[1].id).toEqual("2");
 		expect(tj.done[2].id).toEqual("4");
 	});
 
 	test("undoTasks", () => {
-		// todo: [3], done: [1, 2, 4]
-		undoTasks(tj, "done", [0]);
-		expect(tj.todo.length).toBe(2);
-		expect(tj.done.length).toBe(2);
-		expect(tj.todo[1].id).toEqual("1");
-
+		// todo: [3, 5], done: [1, 2, 4]
 		undoTasks(tj, "done", [0]);
 		expect(tj.todo.length).toBe(3);
+		expect(tj.done.length).toBe(2);
+		expect(tj.todo[2].id).toEqual("1");
+
+		undoTasks(tj, "done", [0]);
+		expect(tj.todo.length).toBe(4);
 		expect(tj.done.length).toBe(1);
-		expect(tj.todo[2].id).toEqual("2");
+		expect(tj.todo[3].id).toEqual("2");
 	});
 
 	test("removeTasks", () => {
-		// todo: [3, 1, 2], done: [4]
+		// todo: [3, 5, 1, 2], done: [4]
 		removeTasks(tj, "done", [0]);
 		expect(tj.done.length).toBe(0);
 		expect(tj.removed.length).toBe(1);
 		expect(tj.removed[0].id).toEqual("4");
 
 		removeTasks(tj, "todo", [0]);
-		expect(tj.todo.length).toBe(2);
+		expect(tj.todo.length).toBe(3);
 		expect(tj.removed.length).toBe(2);
 		expect(tj.removed[1].id).toEqual("3");
 	});
 
 	test("undoTasks", () => {
-		// todo: [1, 2], done: [], removed: [4, 3]
+		// todo: [5, 1, 2], done: [], removed: [4, 3]
 		undoTasks(tj, "removed", [0, 1]);
-		expect(tj.todo.length).toBe(3);
+		expect(tj.todo.length).toBe(4);
 		expect(tj.done.length).toBe(1);
 		expect(tj.removed.length).toBe(0);
-		expect(tj.todo[2].id).toEqual("3");
+		expect(tj.todo[3].id).toEqual("3");
 		expect(tj.done[0].id).toEqual("4");
+	});
+
+	test("eraseTasks", () => {
+		// todo: [5, 1, 2, 3], done: [4], removed: []
+		removeTasks(tj, "todo", [0])
+		eraseTasks(tj, [0]);
+		expect(tj.todo[2].deps).toEqual(["4"]);
+		expect(tj.done[0].deps).toBe(undefined);
 	});
 
 	test("idToIndex", () => {

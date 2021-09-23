@@ -65,7 +65,21 @@ export function removeTasks(taskJson: TaskJson, type: TaskType, indexes: number[
 // Erase removed tasks permanently
 export function eraseTasks(taskJson: TaskJson, indexes: number[]): void {
 	const indexSet = new Set(indexes);
-	_.remove(taskJson.removed, (_, index) => indexSet.has(index));
+	const erasedTasks = _.remove(taskJson.removed, (_, index) => indexSet.has(index));
+
+	// Remove dependencies in parent to prevent reference errors
+	const erasedIds = new Set(erasedTasks.map(task => task.id));
+	const types: TaskType[] = ["todo", "done", "removed"];
+	for (const type of types)
+		for (const task of taskJson[type]) {
+			if (task.deps) {
+				const newDeps = task.deps.filter(dep => !erasedIds.has(dep));
+				if (newDeps.length === 0)
+					delete task.deps;
+				else
+					task.deps = newDeps;
+			}
+		}
 }
 
 export function doTasks(taskJson: TaskJson, indexes: number[]): void {
