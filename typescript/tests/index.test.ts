@@ -1,5 +1,5 @@
+import { compareMergedTaskJson, mergeTaskJson, initTaskJson, isTask, isTaskJson, removeTasks, doTasks, undoTasks, idToIndex, getDepComponent, getDepChildren } from "../lib";
 import { TaskJson } from "index";
-import { compareMergedTaskJson, mergeTaskJson, initTaskJson, isTask, isTaskJson, removeTasks, doTasks, undoTasks, idToIndex, getDepComponent } from "../lib";
 
 describe("Test task manipulations", () => {
 	const tj: TaskJson = {
@@ -306,8 +306,8 @@ describe("Test compareMergedTaskJson", () => {
 	});
 });
 
-describe("Test getDepComponent", () => {
-	test("Normal dependencies", () => {
+describe("Test Component", () => {
+	test("getDepComponent", () => {
 		const tj: TaskJson = {
 			todo: [
 				{
@@ -341,10 +341,56 @@ describe("Test getDepComponent", () => {
 			removed: []
 		};
 
-		expect(getDepComponent(tj, "2").sort())
+		expect(getDepComponent(tj, ["2"]).sort())
 			.toEqual(["1", "2", "4"]);
-		expect(getDepComponent(tj, "3"))
+		expect(getDepComponent(tj, ["3"]))
 			.toEqual(["3"]);
+	});
+
+	test("getDepChildren", () => {
+		const tj: TaskJson = {
+			todo: [
+				{
+					id: "1",
+					text: "Hello, world 1",
+					deps: ["4", "5"],
+					start: new Date("2000-01-01").toISOString(),
+					modified: new Date("2010-07-07").toISOString(),
+				},
+				{
+					id: "2",
+					text: "Hello, world 2",
+					start: new Date("2000-01-02").toISOString(),
+					modified: new Date("2020-07-07").toISOString()
+				},
+				{
+					id: "3",
+					text: "Hello, world 3",
+					start: new Date("2000-01-02").toISOString(),
+					modified: new Date("2020-07-07").toISOString()
+				},
+				{
+					id: "4",
+					text: "Hello, world 4",
+					deps: ["2"],
+					start: new Date("2000-01-02").toISOString(),
+					modified: new Date("2020-07-07").toISOString()
+				},
+				{
+					id: "5",
+					text: "Hello, world 5",
+					start: new Date("2000-01-02").toISOString(),
+					modified: new Date("2020-07-07").toISOString()
+				}
+			],
+			done: [],
+			removed: []
+		};
+
+		expect(getDepChildren(tj, ["1", "2"]).sort())
+			.toEqual(["1", "2", "4"]);
+		expect(getDepChildren(tj, ["4", "5"]).sort())
+			.toEqual(["1", "4", "5"]);
 	});
 });
 

@@ -189,15 +189,31 @@ export function compareMergedTaskJson(original: TaskJson, merged: TaskJson): Dif
 	return diff;
 }
 
+// Search for a graph component
+function getComponent(ids: string[], adjacent: Map<string, string[]>) {
+	// ids are start points
+	// DFS (using stack instead of queue for efficiency)
+	const component: Set<string> = new Set();
+	const stack = [...ids];
+	while (stack.length > 0) {
+		const current = stack.pop()!;
+		if (component.has(current))
+			continue;
+		component.add(current);
+		if (adjacent.has(current))
+			stack.push(...adjacent.get(current)!);
+	}
+
+	return [...component];
+}
+
 // Get a task's connected component in dependency graph
-export function getDepComponent(taskJson: TaskJson, taskId: string): string[] {
+export function getDepComponent(taskJson: TaskJson, taskIds: string[]): string[] {
 	// Build a bidirectional adjacent list first
 	const adjacent: Map<string, string[]> = new Map();
 	const types: TaskType[] = ["todo", "done", "removed"];
 
 	const addEdges = (task: Task) => {
-		if (!adjacent.has(task.id))
-			adjacent.set(task.id, []);
 		if (task.deps) {
 			const origlist = adjacent.get(task.id) ?? [];
 			adjacent.set(task.id, origlist.concat(task.deps));
@@ -212,18 +228,29 @@ export function getDepComponent(taskJson: TaskJson, taskId: string): string[] {
 	for (const type of types)
 		for (const task of taskJson[type])
 			addEdges(task);
-	
-	// BFS (using stack for efficiency)
-	const component: Set<string> = new Set();
-	const stack = [taskId];
-	while (stack.length > 0) {
-		const current = stack.pop()!;
-		if (component.has(current))
-			continue;
-		component.add(current);
-		if (adjacent.has(current))
-			stack.push(...adjacent.get(current)!);
-	}
 
-	return [...component];
+	return getComponent(taskIds, adjacent);
+}
+
+// Get a task's dependant children (including indirect ones)
+export function getDepChildren(taskJson: TaskJson, taskIds: string[]): string[] {
+	// Build a reverse adjacent list first
+	const adjacent: Map<string, string[]> = new Map();
+	const types: TaskType[] = ["todo", "done", "removed"];
+
+	const addEdges = (task: Task) => {
+		if (task.deps) {
+			for (const dep of task.deps) {
+				if (!adjacent.get(dep))
+					adjacent.set(dep, []);
+				adjacent.get(dep)!.push(task.id);
+			}
+		}
+	};
+
+	for (const type of types)
+		for (const task of taskJson[type])
+			addEdges(task);
+
+	return getComponent(taskIds, adjacent);
 }
