@@ -36,6 +36,9 @@ export type DiffStat = {
 };
 
 export declare function initTaskJson(): TaskJson;
+export declare function priorityUrgency(priority: string): number;
+export declare function startUrgency(start: string): number;
+export declare function dueUrgency(due: string): number;
 export declare function taskUrgency(task: Task): number;
 export declare function idToIndex(taskJson: TaskJson, type: TaskType, ids: string[]): number[];
 export declare function removeTasks(taskJson: TaskJson, type: TaskType, indexes: number[]): void;

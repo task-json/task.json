@@ -1,5 +1,23 @@
-import { TaskJson } from "index";
-import { compareMergedTaskJson, mergeTaskJson, initTaskJson, isTask, isTaskJson, removeTasks, doTasks, undoTasks, idToIndex, getDepComponent, getDepChildren, eraseTasks } from "../lib";
+import { TaskJson, Task } from "index";
+import {
+	compareMergedTaskJson,
+	mergeTaskJson,
+	initTaskJson,
+	isTask,
+	isTaskJson,
+	removeTasks,
+	doTasks,
+	undoTasks,
+	idToIndex,
+	getDepComponent,
+	getDepChildren,
+	eraseTasks,
+	startUrgency,
+	priorityUrgency,
+	dueUrgency,
+	taskUrgency
+} from "../lib";
+import { DateTime } from "luxon";
 
 describe("Test task manipulations", () => {
 	const tj: TaskJson = {
@@ -104,6 +122,62 @@ describe("Test task manipulations", () => {
 		expect(
 			idToIndex(tj, "todo", ["1", "3"])
 		).toEqual([0, 2]);
+	});
+});
+
+describe("Test Urgency", () => {
+	const task1: Task = {
+		id: "1",
+		text: "",
+		start: DateTime.local().plus({ days: -20 }).toISO(),
+		modified: new Date("2121-10-20").toISOString(),
+		due: DateTime.local().plus({ days: -1 }).toISO()
+	};
+	const task2: Task = {
+		id: "2",
+		text: "",
+		priority: "C",
+		start: DateTime.local().plus({ days: -10 }).toISO(),
+		modified: new Date("2121-10-20").toISOString(),
+		due: DateTime.local().plus({ days: 4 }).toISO()
+	};
+	const task3: Task = {
+		id: "3",
+		priority: "A",
+		text: "",
+		start: DateTime.local().plus({ days: -1 }).toISO(),
+		modified: new Date("2121-10-20").toISOString(),
+		due: DateTime.local().plus({ days: 20 }).toISO()
+	};
+
+	test("start urgency", () => {
+		const urg1 = startUrgency(task1.start);
+		const urg2 = startUrgency(task2.start);
+		const urg3 = startUrgency(task3.start);
+		expect(urg1).toBeGreaterThan(urg2);
+		expect(urg2).toBeGreaterThan(urg3);
+	});
+
+	test("priority urgency", () => {
+		const urg2 = priorityUrgency(task2.priority!);
+		const urg3 = priorityUrgency(task3.priority!);
+		expect(urg2).toBeLessThan(urg3);
+	});
+
+	test("due urgency", () => {
+		const urg1 = dueUrgency(task1.due!);
+		const urg2 = dueUrgency(task2.due!);
+		const urg3 = dueUrgency(task3.due!);
+		expect(urg1).toBeGreaterThan(urg2);
+		expect(urg2).toBeGreaterThan(urg3);
+	});
+
+	test("task urgency", () => {
+		const urg1 = taskUrgency(task1);
+		const urg2 = taskUrgency(task2);
+		const urg3 = taskUrgency(task3);
+		expect(urg1).toBeGreaterThan(urg2);
+		expect(urg2).toBeGreaterThan(urg3);
 	});
 });
 

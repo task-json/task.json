@@ -1,5 +1,5 @@
 import { Task, TaskJson, TaskType, DiffStat, IndexedTaskJson } from "../index";
-import { DateTime, Interval } from "luxon";
+import { DateTime } from "luxon";
 import * as _ from "lodash";
 export * from "./type.guard";
 
@@ -11,30 +11,40 @@ export function initTaskJson(): TaskJson {
 	};
 }
 
+export function priorityUrgency(priority: string): number {
+  return "Z".charCodeAt(0) - priority.charCodeAt(0) + 2;
+}
+
+export function startUrgency(start: string): number {
+	const days = -DateTime.fromISO(start).diffNow("days").days;
+	if (days <= 0)
+		return 0;
+	return Math.exp(-1 / days);
+}
+
+export function dueUrgency(due: string): number {
+	const days = DateTime.fromISO(due).diffNow("days").days;
+
+	if (days <= 0) {
+		return 4000;
+	}
+	else if (days < 3) {
+		return 1000 * (4 - days);
+	}
+	else if (days < 7) {
+		return 100 * (13 - days);
+	}
+	else {
+		return 1;
+	}
+}
+
 export function taskUrgency(task: Task): number {
-  let urg = 0;
-  if (task.priority) {
-    urg += "Z".charCodeAt(0) - task.priority.charCodeAt(0) + 2;
-  }
-  if (task.due) {
-    const interval = Interval.fromDateTimes(
-      DateTime.local(),
-      DateTime.fromISO(task.due)
-    );
-    const days = interval.length("days");
-		if (!interval.isValid) {
-			urg += 4000;
-		}
-    else if (days < 3) {
-      urg += 1000 * (3 - days);
-    }
-    else if (days < 7) {
-      urg += 100 * (7 - days);
-    }
-    else {
-      urg += 0.1;
-    }
-  }
+  let urg = startUrgency(task.start);
+	if (task.priority)
+		urg += priorityUrgency(task.priority);
+  if (task.due)
+		urg += dueUrgency(task.due);
   return urg;
 }
 

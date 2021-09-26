@@ -36,7 +36,10 @@ const taskJson3 = mergeTaskJson(taskJson1, taskJson2);
 | Name          | Description                                |
 | ------------- | ------------------------------------------ |
 | initTaskJson  | Create an empty TaskJson object            |
-| taskUrgency   | Compute task urgency for sorting           |
+| priorityUrgency | Compute only priority urgency |
+| startUrgency | Compute only start date urgency |
+| dueUrgency | Compute only due date urgency |
+| taskUrgency   | Compute total task urgency for sorting           |
 | idToIndex     | Find indexes by ids                        |
 | removeTasks   | Remove tasks by indexes                    |
 | eraseTasks    | Erase removed tasks by indexes permanently |
