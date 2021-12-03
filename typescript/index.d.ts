@@ -7,6 +7,7 @@ export interface Task {
   contexts?: string[];
   deps?: string[];
   due?: string;
+  wait?: string;
   start: string;
   end?: string;
   modified: string;

@@ -23,8 +23,15 @@ export function isTask(obj: any, _argumentName?: string): obj is Task {
             obj.contexts.every((e: any) =>
                 typeof e === "string"
             )) &&
+        (typeof obj.deps === "undefined" ||
+            Array.isArray(obj.deps) &&
+            obj.deps.every((e: any) =>
+                typeof e === "string"
+            )) &&
         (typeof obj.due === "undefined" ||
             typeof obj.due === "string") &&
+        (typeof obj.wait === "undefined" ||
+            typeof obj.wait === "string") &&
         typeof obj.start === "string" &&
         (typeof obj.end === "undefined" ||
             typeof obj.end === "string") &&
