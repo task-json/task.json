@@ -44,6 +44,7 @@ The `removed`, `id` and `modified` fields are necessary for synchronization betw
 
 Generally, task.json can be treated as a list of JSON tasks.
 It's usually parsed line by line and finally collected into a list.
+It's recommended to sort tasks by created date but not required.
 
 
 ## Libraries
