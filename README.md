@@ -26,15 +26,15 @@ Fields for each task are defined as follows:
 | projects | string[] | no       | Project tags              |
 | contexts | string[] | no       | Context tags              |
 | deps     | string[] | no       | Dependencies              |
-| due      | Date     | no       | Due date                  |
-| wait     | Date     | no       | Date until task is shown  |
-| created  | Date     | yes      | Created date of a task    |
-| modified | Date     | yes      | Modified date of a task   |
-| done     | Date     | no       | Done date of a task       |
+| due      | DateTime | no       | Due date                  |
+| wait     | DateTime | no       | Date until task is shown  |
+| created  | DateTime | yes      | Created date of a task    |
+| modified | DateTime | yes      | Modified date of a task   |
+| done     | DateTime | no       | Done date of a task       |
 
 The `Status` type above can be one of the following string: `todo`, `done`, `removed`.
 
-The `Date` type above represents a string in ISO 8601 format.
+The `DateTime` type above represents a string in ISO 8601 format.
 UUID is recommended for `id` but not mandatory.
 
 The format mainly follows the definition of `todo.txt`
