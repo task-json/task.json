@@ -28,9 +28,9 @@ Fields for each task are defined as follows:
 | deps     | string[] | no       | Dependencies              |
 | due      | Date     | no       | Due date                  |
 | wait     | Date     | no       | Date until task is shown  |
-| start    | Date     | yes      | Created date of a task    |
-| end      | Date     | no       | Done date of a task       |
+| created  | Date     | yes      | Created date of a task    |
 | modified | Date     | yes      | Modified date of a task   |
+| done     | Date     | no       | Done date of a task       |
 
 The `Status` type above can be one of the following string: `todo`, `done`, `removed`.
 
