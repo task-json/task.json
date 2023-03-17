@@ -14,11 +14,39 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/> 
  */
 
-import { Task, TaskJson, DiffStat, IndexedTaskJson } from "./types.js";
 import { DateTime } from "luxon";
 
-export * from "./types.guard.js";
-export * from "./types.js";
+
+/** @see {isTaskStatus} ts-auto-guard:type-guard */
+export type TaskStatus = "todo" | "done" | "removed";
+
+/** @see {isTask} ts-auto-guard:type-guard */
+export interface Task {
+  id: string;
+  status: TaskStatus;
+  text: string;
+  priority?: string;
+  projects?: string[];
+  contexts?: string[];
+  deps?: string[];
+  due?: string;
+  wait?: string;
+  created: string;
+  modified: string;
+  done?: string;
+}
+
+/** @see {isTaskJson} ts-auto-guard:type-guard */
+export type TaskJson = Task[];
+
+export type IndexedTaskJson = Map<string, Task>;
+
+export type DiffStat = {
+	created: number,
+	modified: number,
+	removed: number,
+	restored: number
+};
 
 export function priorityUrgency(priority: string): number {
   return "Z".charCodeAt(0) - priority.charCodeAt(0) + 2;
