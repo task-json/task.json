@@ -16,7 +16,9 @@
 
 import { Task, TaskJson, DiffStat, IndexedTaskJson } from "./types.js";
 import { DateTime } from "luxon";
+
 export * from "./types.guard.js";
+export * from "./types.js";
 
 export function priorityUrgency(priority: string): number {
   return "Z".charCodeAt(0) - priority.charCodeAt(0) + 2;
@@ -47,6 +49,10 @@ export function dueUrgency(due: string): number {
 }
 
 export function taskUrgency(task: Task): number {
+	// Only check todo task's urgency
+	if (task.status !== "todo")
+		return 0;
+
   let urg = startUrgency(task.created);
 	if (task.priority)
 		urg += priorityUrgency(task.priority);
