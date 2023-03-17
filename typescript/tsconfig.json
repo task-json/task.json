@@ -4,6 +4,7 @@
 		"target": "es2017",
 		"outDir": "./dist",
 		"sourceMap": true,
+		"declaration": true,
 		"strict": true,
 		"baseUrl": ".",
 	},

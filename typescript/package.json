@@ -16,10 +16,10 @@
   ],
   "scripts": {
     "type-guard": "ts-auto-guard",
-    "build": "ts-auto-guard rm -rf dist && tsc -p ./tsconfig.build.json",
+    "build": "ts-auto-guard && rm -rf dist && tsc -p ./tsconfig.build.json",
     "test": "jest"
   },
-  "types": "index.d.ts",
+  "types": "dist/index.d.ts",
   "author": "DCsunset",
   "license": "AGPL-3.0",
   "devDependencies": {
