@@ -14,18 +14,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/> 
  */
 
-import { Task, TaskJson, TaskType, DiffStat, IndexedTaskJson } from "../index";
+import { Task, TaskJson, DiffStat, IndexedTaskJson } from "./types.js";
 import { DateTime } from "luxon";
-import * as _ from "lodash";
 export * from "./type.guard";
-
-export function initTaskJson(): TaskJson {
-	return {
-		todo: [],
-		done: [],
-		removed: []
-	};
-}
 
 export function priorityUrgency(priority: string): number {
   return "Z".charCodeAt(0) - priority.charCodeAt(0) + 2;
@@ -56,7 +47,7 @@ export function dueUrgency(due: string): number {
 }
 
 export function taskUrgency(task: Task): number {
-  let urg = startUrgency(task.start);
+  let urg = startUrgency(task.created);
 	if (task.priority)
 		urg += priorityUrgency(task.priority);
   if (task.due)
@@ -64,141 +55,113 @@ export function taskUrgency(task: Task): number {
   return urg;
 }
 
-export function idToIndex(taskJson: TaskJson, type: TaskType, ids: string[]): number[] {
-	const idSet = new Set(ids);
-	const indexes: number[] = [];
-
-	taskJson[type].forEach((task, index) => {
-		if (idSet.has(task.id)) {
-			indexes.push(index);
-		}
-	});
-	return indexes;
-}
-
-export function removeTasks(taskJson: TaskJson, type: TaskType, indexes: number[]): void {
+export function removeTasks(taskJson: TaskJson, ids: string[]): TaskJson {
 	const date = new Date().toISOString();
-	const indexSet = new Set(indexes);
+	const idSet = new Set(ids);
 
-	const removedTasks = _.remove(taskJson[type], (_, index) => indexSet.has(index))
-		.map(task => {
-			task.modified = date;
-			return task;
-		});
-	taskJson.removed.push(...removedTasks);
+	return taskJson.map(task => (
+		idSet.has(task.id) ? {
+			...task,
+			status: "removed",
+			modified: date,
+		} : task
+	));
 }
 
 // Erase removed tasks permanently
-export function eraseTasks(taskJson: TaskJson, indexes: number[]): void {
-	const indexSet = new Set(indexes);
-	const erasedTasks = _.remove(taskJson.removed, (_, index) => indexSet.has(index));
+export function eraseTasks(taskJson: TaskJson, ids: string[]): TaskJson {
+	const idSets = new Set(ids);
 
-	// Remove dependencies in parent to prevent reference errors
-	const erasedIds = new Set(erasedTasks.map(task => task.id));
-	const types: TaskType[] = ["todo", "done", "removed"];
-	for (const type of types)
-		for (const task of taskJson[type]) {
-			if (task.deps) {
-				const newDeps = task.deps.filter(dep => !erasedIds.has(dep));
-				if (newDeps.length === 0)
-					delete task.deps;
-				else
-					task.deps = newDeps;
+	return taskJson
+		.filter(task => !idSets.has(task.id))
+		.map(task => {
+			// Remove dependencies in parent to avoid reference errors
+			let deps = task.deps?.filter(dep => !idSets.has(dep));
+			if (!deps?.length) {
+				// Remove field if empty
+				deps = undefined;
 			}
-		}
-}
-
-export function doTasks(taskJson: TaskJson, indexes: number[]): void {
-	const date = new Date().toISOString();
-	const indexSet = new Set(indexes);
-	const doneTasks = _.remove(taskJson.todo, (_, index) => indexSet.has(index))
-		.map(task => {
-			task.end = date;
-			task.modified = date;
-			return task;
+			return { ...task, deps };
 		});
-	taskJson.done.push(...doneTasks);
 }
 
-export function undoTasks(taskJson: TaskJson, type: "removed" | "done", indexes: number[]): void {
+export function doTasks(taskJson: TaskJson, ids: string[]): TaskJson {
 	const date = new Date().toISOString();
-	const indexSet = new Set(indexes);
-	const undoneTasks = _.remove(taskJson[type], (_, index) => indexSet.has(index))
-		.map(task => {
-			task.modified = date;
-			return task;
-		});
-	const doneTasks = undoneTasks.filter(task => type === "removed" && task.end);
-	const todoTasks = undoneTasks.filter(task => type === "done" || !task.end);
-	todoTasks.forEach(task => {
-		delete task.end;
-		return task;
-	});
-	taskJson.todo.push(...todoTasks);
-	taskJson.done.push(...doneTasks);
+	const idSet = new Set(ids);
+
+	return taskJson.map(task => (
+		(idSet.has(task.id) && task.status === "todo") ? {	
+			...task,
+			status: "done",
+			done: date,
+			modified: date
+		} : task
+	));
+}
+
+// Undo tasks that are done or removed
+export function undoTasks(taskJson: TaskJson, ids: string[]): TaskJson {
+	const date = new Date().toISOString();
+	const idSet = new Set(ids);
+
+	return taskJson.map(task => (
+		(idSet.has(task.id) && task.status !== "todo") ? {	
+			...task,
+			// If done is set and status is removed, change it from removed to done.
+			// Otherwise, change to todo
+			status: (task.status === "removed" && task.done) ? "done" : "todo",
+			// Only remove the done date when change from done to todo
+			done: task.status === "done" ? undefined : task.done,
+			modified: date
+		} : task
+	));
 }
 
 
-// index taskJson
+// index taskJson by id
 export function indexTaskJson(taskJson: TaskJson): IndexedTaskJson {
 	const tasks: IndexedTaskJson = new Map();
-	const types: TaskType[] = ["todo", "done", "removed"];
 
-	for (const type of types)
-		for (const task of taskJson[type])
-			tasks.set(task.id, { type, task });
+	for (const task of taskJson)
+		tasks.set(task.id, task);
 	return tasks;
-}
-
-// deindex indexedTaskJson
-export function deindexTaskJson(indexedTaskJson: IndexedTaskJson): TaskJson {
-	const taskJson = initTaskJson();
-	for (const { type, task } of indexedTaskJson.values()) {
-		taskJson[type].push(task);
-	}
-	return taskJson;
 }
 
 export function mergeTaskJson(...taskJsons: TaskJson[]): TaskJson {
 	const tasks: IndexedTaskJson = new Map();
-	const types: TaskType[] = ["todo", "done", "removed"];
 
-	for (const type of types) {
-		for (const taskJson of taskJsons) {
-			for (const task of taskJson[type]) {
-				if (tasks.has(task.id)) {
-					// Compare timestamp
-					const current = DateTime.fromISO(task.modified);
-					const existing = DateTime.fromISO(tasks.get(task.id)!.task.modified);
+	for (const taskJson of taskJsons) {
+		for (const task of taskJson) {
+			if (tasks.has(task.id)) {
+				// Compare timestamp
+				const current = DateTime.fromISO(task.modified);
+				const existing = DateTime.fromISO(tasks.get(task.id)!.modified);
 
-					// Update tasks only if current > existing
-					if (current <= existing)
-						continue;
-				}
-
-				tasks.set(task.id, { type, task });
+				// Update tasks only if current > existing
+				if (current <= existing)
+					continue;
 			}
+
+			tasks.set(task.id, task);
 		}
 	}
 
-	const result = deindexTaskJson(tasks);
-	// Sort tasks by start date
-	for (const type of types) {
-		result[type].sort((left, right) => {
-			const startLeft = DateTime.fromISO(left.start);
-			const startRight = DateTime.fromISO(right.start);
-			return startLeft < startRight ? -1 : 1;
-		});
-	}
+	const result = [...tasks.values()];
+	// Sort tasks by created date
+	result.sort((left, right) => {
+		const leftDate = DateTime.fromISO(left.created);
+		const rightDate = DateTime.fromISO(right.created);
+		return leftDate < rightDate ? -1 : 1;
+	});
 
 	return result;
 }
 
-// pre-condition: merged = mergerTaskJson(...[original, ...])
+// pre-condition: merged = mergeTaskJson(..., original, ...)
 export function compareMergedTaskJson(original: TaskJson, merged: TaskJson): DiffStat {
 	const diff: DiffStat = {
 		created: 0,
-		updated: 0,
+		modified: 0,
 		removed: 0,
 		restored: 0
 	};
@@ -206,20 +169,20 @@ export function compareMergedTaskJson(original: TaskJson, merged: TaskJson): Dif
 	const indexedMerged = indexTaskJson(merged);
 
 	// merged must include all tasks in original
-	for (const [id, { type: mergedType, task: mergedTask }] of indexedMerged.entries()) {
+	for (const [id, mergedTask ] of indexedMerged.entries()) {
 		if (indexedOriginal.has(id)) {
-			const { type: originalType, task: originalTask } = indexedOriginal.get(id)!;
+			const originalTask = indexedOriginal.get(id)!;
 			// Unmodified
-			if (originalType === mergedType) {
-				if (!_.isEqual(mergedTask, originalTask))
-					++diff.updated; // Update info
+			if (originalTask.status === mergedTask.status) {
+				if (mergedTask.modified !== originalTask.modified)
+					++diff.modified;
 			}
-			else if (mergedType === "removed")
+			else if (mergedTask.status === "removed")
 				++diff.removed;
-			else if (originalType === "removed")
+			else if (originalTask.status === "removed")
 				++diff.restored;
 			else
-				++diff.updated; // Update type
+				++diff.modified; // Type modified
 		}
 		else {
 			++diff.created;
@@ -248,15 +211,15 @@ function getComponent(ids: string[], adjacent: Map<string, string[]>) {
 }
 
 // Get a task's connected component in dependency graph
-export function getDepComponent(taskJson: TaskJson, taskIds: string[]): string[] {
+export function getDepComponent(taskJson: TaskJson, ids: string[]): string[] {
 	// Build a bidirectional adjacent list first
 	const adjacent: Map<string, string[]> = new Map();
-	const types: TaskType[] = ["todo", "done", "removed"];
 
 	const addEdges = (task: Task) => {
 		if (task.deps) {
-			const origlist = adjacent.get(task.id) ?? [];
-			adjacent.set(task.id, origlist.concat(task.deps));
+			const origList = adjacent.get(task.id) ?? [];
+			adjacent.set(task.id, origList.concat(task.deps));
+			// Change it to undirected graph
 			for (const dep of task.deps) {
 				if (!adjacent.get(dep))
 					adjacent.set(dep, []);
@@ -265,18 +228,16 @@ export function getDepComponent(taskJson: TaskJson, taskIds: string[]): string[]
 		}
 	};
 
-	for (const type of types)
-		for (const task of taskJson[type])
-			addEdges(task);
+	for (const task of taskJson)
+		addEdges(task);
 
-	return getComponent(taskIds, adjacent);
+	return getComponent(ids, adjacent);
 }
 
 // Get a task's dependant children (including indirect ones)
 export function getDepChildren(taskJson: TaskJson, taskIds: string[]): string[] {
 	// Build a reverse adjacent list first
 	const adjacent: Map<string, string[]> = new Map();
-	const types: TaskType[] = ["todo", "done", "removed"];
 
 	const addEdges = (task: Task) => {
 		if (task.deps) {
@@ -288,9 +249,8 @@ export function getDepChildren(taskJson: TaskJson, taskIds: string[]): string[] 
 		}
 	};
 
-	for (const type of types)
-		for (const task of taskJson[type])
-			addEdges(task);
+	for (const task of taskJson)
+		addEdges(task);
 
 	return getComponent(taskIds, adjacent);
 }
