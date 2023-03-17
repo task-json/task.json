@@ -24,8 +24,8 @@ export function priorityUrgency(priority: string): number {
   return "Z".charCodeAt(0) - priority.charCodeAt(0) + 2;
 }
 
-export function startUrgency(start: string): number {
-	const days = -DateTime.fromISO(start).diffNow("days").days;
+export function createdUrgency(created: string): number {
+	const days = -DateTime.fromISO(created).diffNow("days").days;
 	if (days <= 0)
 		return 0;
 	return Math.exp(-1 / days);
@@ -53,7 +53,7 @@ export function taskUrgency(task: Task): number {
 	if (task.status !== "todo")
 		return 0;
 
-  let urg = startUrgency(task.created);
+  let urg = createdUrgency(task.created);
 	if (task.priority)
 		urg += priorityUrgency(task.priority);
   if (task.due)
