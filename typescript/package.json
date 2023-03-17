@@ -15,7 +15,8 @@
     "index.d.ts"
   ],
   "scripts": {
-    "build": "rm -rf dist && tsc -p ./tsconfig.build.json",
+    "type-guard": "ts-auto-guard",
+    "build": "ts-auto-guard rm -rf dist && tsc -p ./tsconfig.build.json",
     "test": "jest"
   },
   "types": "index.d.ts",

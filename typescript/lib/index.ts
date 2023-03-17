@@ -16,7 +16,7 @@
 
 import { Task, TaskJson, DiffStat, IndexedTaskJson } from "./types.js";
 import { DateTime } from "luxon";
-export * from "./type.guard";
+export * from "./types.guard.js";
 
 export function priorityUrgency(priority: string): number {
   return "Z".charCodeAt(0) - priority.charCodeAt(0) + 2;
