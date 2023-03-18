@@ -1,7 +1,7 @@
 {
   "name": "task.json",
-  "version": "2.8.0",
-  "description": "Typescript library for task.json",
+  "version": "3.0.0",
+  "description": "TypeScript library for task.json",
   "keywords": [
     "task.json",
     "typescript",
