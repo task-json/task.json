@@ -8,7 +8,7 @@ The JSON format overcomes the problem in the strict rules of `todo.txt` that som
 It also provides more flexibility to add custom fields for other applications.
 
 
-## task.json format
+## task.json format (v2.0.0)
 
 task.json is a large multi-line string (usually stored in a file)
 that consists of a number of tasks where each task is a single-line JSON string.
