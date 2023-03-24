@@ -245,7 +245,7 @@ function getComponent(ids: string[], adjacent: Map<string, string[]>) {
 }
 
 // Get a task's connected component in dependency graph
-export function getDepComponent(taskJson: TaskJson, ids: string[]): string[] {
+export function getDepComponent(taskJson: TaskJson, ids: string[]) {
 	// Build a bidirectional adjacent list first
 	const adjacent: Map<string, string[]> = new Map();
 
@@ -269,7 +269,7 @@ export function getDepComponent(taskJson: TaskJson, ids: string[]): string[] {
 }
 
 // Get a task's dependant children (including indirect ones)
-export function getDepChildren(taskJson: TaskJson, taskIds: string[]): string[] {
+export function getDepChildren(taskJson: TaskJson, taskIds: string[]) {
 	// Build a reverse adjacent list first
 	const adjacent: Map<string, string[]> = new Map();
 
@@ -287,4 +287,19 @@ export function getDepChildren(taskJson: TaskJson, taskIds: string[]): string[] 
 		addEdges(task);
 
 	return getComponent(taskIds, adjacent);
+}
+
+/// Serialize TaskJson into string
+export function serializeTaskJson(taskJson: TaskJson) {
+	return taskJson
+		.map(task => JSON.stringify(task))
+		.join("\n");
+}
+
+/// Deserialize string into TaskJson
+export function deserializeTaskJson(data: string): TaskJson {
+	return data
+		.trim()  // Trim white spaces to avoid empty lines
+		.split("\n")
+		.map(line => JSON.parse(line));
 }

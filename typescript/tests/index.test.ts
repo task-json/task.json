@@ -13,8 +13,10 @@ import {
 	createdUrgency,
 	priorityUrgency,
 	dueUrgency,
-	taskUrgency
-} from "../src";
+	taskUrgency,
+	serializeTaskJson,
+	deserializeTaskJson
+} from "../src/index";
 import { DateTime } from "luxon";
 
 
@@ -492,4 +494,62 @@ describe("Test Component", () => {
 			.toEqual(["1", "4", "5"]);
 	});
 });
+
+
+describe("Test serialization/deserialization", () => {
+	const tj: TaskJson = [
+		{
+			id: "1",
+			status: "todo",
+			text: "Hello, world 1",
+			deps: ["4", "5"],
+			created: new Date("2000-01-01").toISOString(),
+			modified: new Date("2010-07-07").toISOString(),
+		},
+		{
+			id: "2",
+			status: "todo",
+			text: "Hello, world 2",
+			created: new Date("2000-01-02").toISOString(),
+			modified: new Date("2020-07-07").toISOString()
+		},
+		{
+			id: "3",
+			status: "todo",
+			text: "Hello, world 3",
+			created: new Date("2000-01-02").toISOString(),
+			modified: new Date("2020-07-07").toISOString()
+		},
+		{
+			id: "4",
+			status: "todo",
+			text: "Hello, world 4",
+			deps: ["2"],
+			created: new Date("2000-01-02").toISOString(),
+			modified: new Date("2020-07-07").toISOString()
+		},
+		{
+			id: "5",
+			status: "todo",
+			text: "Hello, world 5",
+			created: new Date("2000-01-02").toISOString(),
+			modified: new Date("2020-07-07").toISOString()
+		}
+	];
+
+	let serialized = "";
+	
+	test("test serialization", () => {
+		serialized = serializeTaskJson(tj);
+		expect(serialized.split("\n").length).toEqual(tj.length);
+	});
+
+	test("test deserialization", () => {
+		expect(deserializeTaskJson(serialized)).toEqual(tj);
+	});
+	
+	test("test deserialization with extra lines", () => {
+		expect(deserializeTaskJson("\n" + serialized + "\n\n")).toEqual(tj);
+	});
+})
 

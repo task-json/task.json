@@ -1,7 +1,8 @@
 {
 	"compilerOptions": {
-		"module": "commonjs",
-		"target": "es2017",
+		"moduleResolution": "nodenext",
+		"module": "ESNext",
+		"target": "ESNext",
 		"outDir": "./dist",
 		"sourceMap": true,
 		"declaration": true,
