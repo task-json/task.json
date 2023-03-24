@@ -16,8 +16,8 @@
     "LICENSE"
   ],
   "scripts": {
-    "type-guard": "ts-auto-guard",
-    "build": "ts-auto-guard && rm -rf dist && tsc -p ./tsconfig.build.json",
+    "type-guard": "ts-auto-guard && sed -i 's/\\.\\/index/.\\/index.js/g' ./src/index.guard.ts",
+    "build": "npm run type-guard && rm -rf dist && tsc -p ./tsconfig.build.json",
     "test": "jest"
   },
   "types": "dist/index.d.ts",
