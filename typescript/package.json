@@ -2,6 +2,7 @@
   "name": "task.json",
   "version": "3.1.0",
   "description": "TypeScript library for task.json",
+  "type": "module",
   "keywords": [
     "task.json",
     "typescript",

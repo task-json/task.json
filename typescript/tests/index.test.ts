@@ -16,7 +16,7 @@ import {
 	taskUrgency,
 	serializeTaskJson,
 	deserializeTaskJson
-} from "../src/index";
+} from "../src/index.js";
 import { DateTime } from "luxon";
 
 

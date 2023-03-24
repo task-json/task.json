@@ -3,6 +3,7 @@
 		"moduleResolution": "nodenext",
 		"module": "ESNext",
 		"target": "ESNext",
+		"esModuleInterop": true,
 		"outDir": "./dist",
 		"sourceMap": true,
 		"declaration": true,

@@ -11,6 +11,8 @@ Typescript library for task.json
 npm install task.json
 ```
 
+Note: This package uses ESM.
+
 ## Usage
 
 ```ts
