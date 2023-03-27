@@ -11,3 +11,11 @@ To migrate your old `task.json` file:
 cat old-task.json | ./migrate-v1-to-v2.js > new-task.json
 ```
 
+## Sort properties based on specification
+
+To sort the properties in each task object (v2):
+
+```sh
+cat task.json | ./sort-properties.js > new-task.json
+```
+
