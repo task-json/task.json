@@ -1,0 +1,12 @@
+{
+  "name": "scripts",
+  "version": "0.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {},
+  "author": "DCsunset",
+  "license": "AGPL-3.0",
+  "dependencies": {
+    "luxon": "^3.3.0"
+  }
+}
