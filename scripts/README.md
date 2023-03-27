@@ -1,6 +1,6 @@
 # task.json Scripts
 
-TO use the scripts, first run `npm install` to isntall necessary modules.
+To use the scripts, first clone the repo and run `npm install` to install necessary modules.
 
 ## Migrate from v1 to v2
 
