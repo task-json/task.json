@@ -39,15 +39,6 @@ export interface Task {
 /** @see {isTaskJson} ts-auto-guard:type-guard */
 export type TaskJson = Task[];
 
-export type IndexedTaskJson = Map<string, Task>;
-
-export type DiffStat = {
-	created: number,
-	modified: number,
-	removed: number,
-	restored: number
-};
-
 export function priorityUrgency(priority: string): number {
   return "Z".charCodeAt(0) - priority.charCodeAt(0) + 2;
 }
@@ -153,12 +144,29 @@ export function undoTasks(taskJson: TaskJson, ids: string[]): TaskJson {
 
 
 // index taskJson by id
+export type IndexedTaskJson = Map<string, Task>;
 export function indexTaskJson(taskJson: TaskJson): IndexedTaskJson {
 	const tasks: IndexedTaskJson = new Map();
 
 	for (const task of taskJson)
 		tasks.set(task.id, task);
 	return tasks;
+}
+
+/// classify taskJson by status
+export type ClassifiedTaskJson = {
+	[status in TaskStatus]: Task[]
+};
+export function classifyTaskJson(taskJson: TaskJson) {
+	const classified: ClassifiedTaskJson = {
+		todo: [],
+		done: [],
+		removed: []
+	};
+	
+  taskJson.forEach(t => classified[t.status].push(t));
+
+	return classified;
 }
 
 export function mergeTaskJson(...taskJsons: TaskJson[]): TaskJson {
@@ -191,7 +199,17 @@ export function mergeTaskJson(...taskJsons: TaskJson[]): TaskJson {
 	return result;
 }
 
-// pre-condition: merged = mergeTaskJson(..., original, ...)
+
+/**\
+ * SHow diff between merged and original taskJson
+ * pre-condition: merged = mergeTaskJson(..., original, ...)
+ */
+export type DiffStat = {
+	created: number,
+	modified: number,
+	removed: number,
+	restored: number
+};
 export function compareMergedTaskJson(original: TaskJson, merged: TaskJson): DiffStat {
 	const diff: DiffStat = {
 		created: 0,
@@ -226,7 +244,7 @@ export function compareMergedTaskJson(original: TaskJson, merged: TaskJson): Dif
 	return diff;
 }
 
-// Search for a graph component
+/// Search for a graph component
 function getComponent(ids: string[], adjacent: Map<string, string[]>) {
 	// ids are start points
 	// DFS (using stack instead of queue for efficiency)
@@ -244,7 +262,7 @@ function getComponent(ids: string[], adjacent: Map<string, string[]>) {
 	return [...component];
 }
 
-// Get a task's connected component in dependency graph
+/// Get a task's connected component in dependency graph
 export function getDepComponent(taskJson: TaskJson, ids: string[]) {
 	// Build a bidirectional adjacent list first
 	const adjacent: Map<string, string[]> = new Map();
@@ -268,7 +286,7 @@ export function getDepComponent(taskJson: TaskJson, ids: string[]) {
 	return getComponent(ids, adjacent);
 }
 
-// Get a task's dependant children (including indirect ones)
+/// Get a task's dependant children (including indirect ones)
 export function getDepChildren(taskJson: TaskJson, taskIds: string[]) {
 	// Build a reverse adjacent list first
 	const adjacent: Map<string, string[]> = new Map();

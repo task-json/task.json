@@ -46,6 +46,7 @@ const taskJson3 = mergeTaskJson(taskJson1, taskJson2);
 | doTasks       | Finish todo tasks by ids |
 | undoTasks     | Undo done or removed tasks by ids |
 | indexTaskJson | Convert TaskJson to an indexed map (from id to task) |
+| classifyTaskJson | Classify TaskJson by status |
 | mergeTaskJson | Merge multiple TaskJson arrays |
 | compareMergedTaskJson | Compare merged TaskJson with the original one            |
 | getDepComponent | Get a task's connected component in dependency graph |
