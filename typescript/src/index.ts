@@ -310,14 +310,14 @@ export function getDepChildren(taskJson: TaskJson, taskIds: string[]) {
 /// Serialize TaskJson into string
 export function serializeTaskJson(taskJson: TaskJson) {
 	return taskJson
-		.map(task => JSON.stringify(task))
-		.join("\n");
+		.map(task => JSON.stringify(task) + "\n")
+		.join("");
 }
 
 /// Deserialize string into TaskJson
 export function deserializeTaskJson(data: string): TaskJson {
 	return data
-		.trim()  // Trim white spaces to avoid empty lines
+		.trim()  // Trim ending white spaces
 		.split("\n")
 		.map(line => JSON.parse(line));
 }

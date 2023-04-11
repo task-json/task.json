@@ -541,7 +541,7 @@ describe("Test serialization/deserialization", () => {
 	
 	test("test serialization", () => {
 		serialized = serializeTaskJson(tj);
-		expect(serialized.split("\n").length).toEqual(tj.length);
+		expect(serialized.trim().split("\n").length).toEqual(tj.length);
 	});
 
 	test("test deserialization", () => {
