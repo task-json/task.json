@@ -12,8 +12,9 @@ It also provides more flexibility to add custom fields for other applications.
 
 task.json is a large multi-line string (usually stored in a file)
 that consists of a number of tasks where each task is a single-line JSON string.
+(note: there's a newline character after the last task).
 Using single-line JSON for each task enables programs to append to a the file when a new task is added.
-This accelerates the operation and makes it disk friendly.
+Besides, it works well with Linux command line tools like grep.
 
 Fields for each task are defined as follows:
 
