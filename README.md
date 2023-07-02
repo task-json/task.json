@@ -59,6 +59,11 @@ It's recommended to sort tasks by created date but not required.
 * [task.json-client](https://github.com/task-json/task.json-client): Client library to interact with task.json-server
 * [task.json-web](https://github.com/task-json/task.json-web): Web UI for task.json
 
+
+## Acknowledgement
+
+The logo is modified based on the icon credited to [Materidal Design Icons](https://pictogrammers.com/library/mdi/).
+
 ## License
 
 All code licensed under AGPL-3.0. Full copyright notice:
