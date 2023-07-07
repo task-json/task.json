@@ -18,8 +18,8 @@ Note: This package uses ESM.
 ```ts
 import { Task, doTasks, mergeTaskJson } from "task.json";
 
-let taskJson1: TaskJson[] = [];
-let taskJson2: TaskJson[] = [];
+let taskJson1: Task[] = [];
+let taskJson2: Task[] = [];
 
 const task: Task = {
   id: "fc18da07-9717-4199-8474-9bbc4c4c6cb5",
